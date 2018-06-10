@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, style, transition, animate, keyframes, query, stagger } from "@angular/animations";
+import { DataService } from "../data.service";
 
 @Component({
   selector: 'app-home',
@@ -34,22 +35,26 @@ export class HomeComponent implements OnInit {
   itemCount: number; // = 4; // interpolation
   btnText: string='Add Goal'; // property binding
   goalText: string="My First Goal for life";
-  goals = ["Swim Ocean", "Read Harry Potter"];
+  goals = [];
 
-  constructor() { }
+  constructor(private _data: DataService) { }
 
   ngOnInit() {
     this.itemCount = this.goals.length;
+    this._data.goal.subscribe(res => this.goals = res);
+    this._data.changeGoal(this.goals);
   }
 
   addGoal() {
     this.goals.push(this.goalText);
     this.goalText = "";
     this.itemCount = this.goals.length;
+    this._data.changeGoal(this.goals);
   }
 
   deleteGoal(iIndex) {
     this.goals.splice(iIndex, 1);
+    this._data.changeGoal(this.goals);
   }
 
 }
